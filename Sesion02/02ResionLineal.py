@@ -59,7 +59,7 @@ def grafica_modelo(y_real, y_pred, nombre, rmse, r2, ax_scatter, ax_error):
     ax_scatter.legend(fontsize=8)
 
     #histograma de residuos
-    residuos = y_real, y_pred
+    residuos = y_real - y_pred
 
     ax_error.hist(
         residuos,
@@ -75,3 +75,46 @@ def grafica_modelo(y_real, y_pred, nombre, rmse, r2, ax_scatter, ax_error):
     ax_error.set_title(f'Distribucion de errores - {nombre}')
     ax_error.legend(fontsize=8)
 
+#para el modelo de entrenamiento necestamos pasar por los 3 lineal, ridge y lasso
+#para visualizarlo tenemos que crear como su fura una matriz 3 x 2
+
+fig, axes = plt.subplots(
+    nrows=3, ncols=2, figsize=(14, 12)
+)
+
+fig.suptitle(
+    'Comparacion de modelos de regresion para el caso de las casas de california', 
+    fontsize=14, fontweight='bold'
+)
+
+#creamos el modelo (la matriz de cada elemento)
+for fila, (nombre, modelo) in enumerate([
+    ('Lineal ', LinearRegression()),
+    ('Ridge ', Ridge(alpha=1.0)),
+    ('Lasso ', Lasso(alpha=0.1))
+]):
+    #fit para el entrenamiento del modelo y minimizar el error de los coeficientes
+    modelo.fit(X_train, y_train)
+
+    #aplicar la funcion de prediccion para que realice el producto cruz de los datos de prueba
+    y_pred = modelo.predict(X_test)
+
+    #tenemos calcular el error promedio de las unidades
+    #recordemos que cuanto mas bajo sea el error es mejor
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+    #proporcion de la varianza explicada por el modelo de reduccion de coeficientes por valor absoluto 
+    #varianza = 0.60 modelo explica que tenemos una variacion del 60% sobre los precios de 100 k
+    #varianza la variacion entre los datos, 0, 1, y tenemos una media de 50k 
+    r2 = r2_score(y_test, y_pred)
+
+    print(f"{nombre}: RMSE={rmse:.4f}, R2={r2:.4f}")
+
+    grafica_modelo(
+        y_test, y_pred, nombre, rmse, r2, 
+        ax_scatter=axes[fila, 0],
+        ax_error=axes[fila, 1]
+    )
+#se ajuste automaticamente al espaciado entre las graficas
+plt.tight_layout()
+plt.show()
