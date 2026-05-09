@@ -50,7 +50,7 @@ print(f"RMSE = {rmse:.4f} en $100,000 USD")
 #vamos a visualizarlo
 
 plt.figure(figsize=(7, 5))
-plt.scatter(y_test, y_pred, alpha=0.3, s=10, color='blue')
+plt.scatter(y_test, y_pred, alpha=0.3, s=10, color='steelblue')
 minimo, maximo = y_test.min(), y_test.max()
 plt.plot([minimo, maximo], [minimo, maximo], 'r--', linewidth=1.5,
          label='Prediccion perfecta')
