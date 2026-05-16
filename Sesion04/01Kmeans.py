@@ -37,24 +37,24 @@ siluetas = [] # aplicar silueta
 
 # primero creamos el modelo con sus clusters, segundo empezamos agrupar, y a partir de la semilla es como los agrupamos, y esto se tienq eue ejecutar un numero de veces tal que kmeans se eejctia con los centroides inciales y debemos de guardar el resultado con menor inercia
 
-k_range = range(2,9)
+k_range = range(2,10)
 
 for k in k_range:
     km = KMeans(n_clusters=k, random_state=42, n_init=10)
 
-#entrenar el modelo Y devuelve la etiqueta de cada cluster
-# a cada punto (0, 1, ... , k-1)
-labels = km.fit_predict(X)
+    #entrenar el modelo Y devuelve la etiqueta de cada cluster
+    # a cada punto (0, 1, ... , k-1)
+    labels = km.fit_predict(X)
 
-inercias.append(km.inertia_)
+    inercias.append(km.inertia_)
 
-siluetas.append(silhouette_score(X, labels))
+    siluetas.append(silhouette_score(X, labels))
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
 
 #graficamos primero los codos (inercia)
 
-ax1.plot(k_range, inercias, 'bo_', #puntos azules unidos por la linea
+ax1.plot(k_range, inercias, 'bo-', #puntos azules unidos por la linea
          linewidth=2, markersize=7)
 ax1.set_title('Metodo del codo')
 ax1.set_xlabel('Numero de clusters (k)')
